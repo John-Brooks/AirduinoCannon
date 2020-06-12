@@ -7,8 +7,7 @@ extern "C"{
 int main()
 {
     testing::InitGoogleTest();
-    RUN_ALL_TESTS();
-    return 0;
+    return RUN_ALL_TESTS();
 }
 
 TEST(dummy_test, test1)
