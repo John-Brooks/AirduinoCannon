@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 
-extern "C"{
-    #include "main.h"
-}
+#include "main.h"
 
 int main()
 {
