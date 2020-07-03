@@ -88,6 +88,10 @@ void detachInterrupt(int interrupt)
 {
     arduino.DetachInterrupt(interrupt);
 }
+int digitalPinToInterrupt(int pin)
+{
+    return pin;
+}
 
 
 void Arduino::TickMillisecond(uint32_t milliseconds)

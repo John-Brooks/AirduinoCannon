@@ -3,6 +3,7 @@
 #include "ButtonInput.h"
 
 typedef bool (*GONOGOCallback_t)(void);
+typedef bool (*AboutToFireCallback_t)(int);
 
 #define MAX_GO_NOGO_CALLBACKS 5
 
@@ -18,6 +19,7 @@ public:
     bool HasFault() const { return mFaultActive; }
     const char* GetFaultText() const { return mFaultText; }
     void ClearFault() { mFaultActive = false; }
+    void SetAboutToFireCallback(AboutToFireCallback_t funct);
 
 private:
     void Fire(uint32_t current_time);
@@ -39,5 +41,7 @@ private:
 
     bool mFaultActive = false;
     char mFaultText[33];
+
+    AboutToFireCallback_t mAboutToFireCallback = nullptr;
 };   
 

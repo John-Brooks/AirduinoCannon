@@ -58,6 +58,11 @@ void FireControl::AddGONOGOCallback(GONOGOCallback_t funct)
     mGONOGOCallbacks[mNumCallbacks++] = funct;
 }
 
+void FireControl::SetAboutToFireCallback(AboutToFireCallback_t funct)
+{
+    mAboutToFireCallback = funct;
+}
+
 void FireControl::SelectNextBarrel()
 {
     if (mSelectedBarrel >= 3)
@@ -106,6 +111,10 @@ void FireControl::Fire(uint32_t current_time)
         default:
             return;
     }
+
+    //Last Chance
+    if(mAboutToFireCallback && !mAboutToFireCallback(mSelectedBarrel))
+        return;
 
     uint32_t now;
     digitalWrite(pin, SOLENOID_OPEN);

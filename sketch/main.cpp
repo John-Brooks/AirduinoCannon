@@ -2,12 +2,33 @@
 #include "Arduino.h"
 #include "ArduinoPins.h"
 #include "FireControl.h"
+#include "VelocityMeasurement.h"
+
+VelocityMeasurement* velocity_measures[3] = {nullptr};
+
+bool AboutToFire(int barrel)
+{
+    if( barrel > 2 || barrel < 0)
+        return false;
+    velocity_measures[barrel]->PrepareForMeasurement(); 
+    return true;  
+}
 
 int arduino_main()
 {
     InitializePins();
-
     FireControl fire_control;
+
+    //Setup velocity measurement.
+    VelocityMeasurement barrel_1_velocity(BARREL1_GATE1_PIN, BARREL1_GATE2_PIN, 0.03);
+    velocity_measures[0] = &barrel_1_velocity;
+    VelocityMeasurement barrel_2_velocity(BARREL2_GATE1_PIN, BARREL2_GATE2_PIN, 0.03);
+    velocity_measures[1] = &barrel_2_velocity;
+    VelocityMeasurement barrel_3_velocity(BARREL3_GATE1_PIN, BARREL3_GATE2_PIN, 0.03);
+    velocity_measures[2] = &barrel_3_velocity;
+
+    //Setup fire control
+    fire_control.SetAboutToFireCallback(AboutToFire);
 
 
     while(true)
