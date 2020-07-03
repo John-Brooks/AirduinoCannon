@@ -20,6 +20,7 @@ int arduino_main()
 void InitializePins()
 {
     pinMode(FIRE_BUTTON_PIN, INPUT);
+    pinMode(BARREL_SELECT_BUTTON_PIN, INPUT);
 
     pinMode(BARREL_1_SOLENOID_PIN, OUTPUT);
     digitalWrite(BARREL_1_SOLENOID_PIN, SOLENOID_CLOSED);

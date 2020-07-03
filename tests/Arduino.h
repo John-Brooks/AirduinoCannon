@@ -4,6 +4,7 @@
 #include <vector>
 #include <tuple>
 #include "Mega2560Pins.h"
+#include <stdint.h>
 
 #define HIGH 1
 #define LOW 0
@@ -25,7 +26,7 @@ void pinMode(int pin, int mode);
 uint32_t millis();
 uint32_t micros();
 void attachInterrupt(int interrupt, ISR funct, int mode);
-void detachInterrupt();
+void detachInterrupt(int interrupt);
 int digitalPinToInterrupt(int pin);
 void delay(int milliseconds);
 void delayMicroseconds(int microseconds);
@@ -44,17 +45,21 @@ public:
     uint32_t Millis();
     uint32_t Micros();
     void SchedulePinToggle(int pin, uint32_t microseconds_offset);
+    void AttachInterrupt(int interrupt, ISR funct, int mode);
+    void DetachInterrupt(int pin);
 
 private:
+    void HandlePinInterrupt(int pin, int old_value, int new_value);
+
     uint16_t pin_states[PIN_COUNT];
     bool pin_modes[PIN_COUNT];
     uint64_t current_micros = 0;
     bool increment_on_micros_call = false;
     std::map<uint16_t, uint8_t> registers;
-    std::map<int, ISR> interrupts;
+    std::map<int, std::pair<ISR, int> > interrupts;
 
     //used for simulating pin state changes on an arbitrary timeline.
-    std::multimap<uint64_t, std::vector<int>> scheduled_pin_toggles;
+    std::map<uint64_t, std::vector<int>> scheduled_pin_toggles;
 };
 
 extern Arduino arduino;
