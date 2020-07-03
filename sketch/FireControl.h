@@ -20,6 +20,7 @@ private:
     bool FireButtonIsPressed(uint32_t current_time);
     bool BarrelSelectButtonPressed(uint32_t current_time);
     void SelectNextBarrel();
+    void WaitValveDwellTime();
 
     enum class FireControlState{
         WaitingForButtonPress,

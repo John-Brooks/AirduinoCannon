@@ -74,7 +74,6 @@ bool FireControl::Loop(uint32_t current_time)
 void FireControl::Fire(uint32_t current_time)
 {
     mRepressurizationDoneTime = millis() + REPRESSURIZATION_TIME; 
-    uint32_t dwell = mDwellTimes[mSelectedBarrel-1];
     int pin;
     switch(mSelectedBarrel)
     {
@@ -93,14 +92,24 @@ void FireControl::Fire(uint32_t current_time)
 
     uint32_t now;
     digitalWrite(pin, SOLENOID_OPEN);
-    uint32_t start = micros();
-    
-    //Spin while we wait out the relatively short dwell time
-    do {
-        now = micros();
-    } while (GetUnsignedDifference(start, now) < dwell);
-
+    WaitValveDwellTime();
     digitalWrite(pin, SOLENOID_CLOSED);
 
     mState = FireControlState::Repressurization;
+}
+void FireControl::WaitValveDwellTime()
+{
+    uint32_t dwell = mDwellTimes[mSelectedBarrel-1];
+    
+    //Per the Arduino documentation delayMicroseconds is only accurate to ~16000 us. 
+    //If we need to wait longer than that, wait using delay (in ms), then
+    //wait using delayMicroseconds.
+    if(dwell > 16000)
+    {
+        int dwell_partial = (dwell - 16000) / 1000;
+        delay(dwell_partial);
+        delayMicroseconds(dwell - dwell_partial);
+    }
+    else
+        delayMicroseconds(dwell);
 }

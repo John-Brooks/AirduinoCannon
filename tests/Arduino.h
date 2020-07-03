@@ -27,6 +27,8 @@ uint32_t micros();
 void attachInterrupt(int interrupt, ISR funct, int mode);
 void detachInterrupt();
 int digitalPinToInterrupt(int pin);
+void delay(int milliseconds);
+void delayMicroseconds(int microseconds);
 
 class Arduino
 {
@@ -34,7 +36,7 @@ public:
     void IncrementOnMicrosCall(bool set) {increment_on_micros_call = set;}
     void TickMillisecond(uint32_t milliseconds = 1);
     void TickMicrosecond(uint32_t microseconds = 1);
-    bool Reset();
+    void Reset();
     uint16_t GetPinState(int pin) const;
     void SetPinState(int pin, uint16_t state);
     bool GetPinMode(int pin) const;
@@ -44,8 +46,6 @@ public:
     void SchedulePinToggle(int pin, uint32_t microseconds_offset);
 
 private:
-    void CheckPinSchedule();
-
     uint16_t pin_states[PIN_COUNT];
     bool pin_modes[PIN_COUNT];
     uint64_t current_micros = 0;

@@ -6,6 +6,13 @@
 #define BARREL_3_SOLENOID_PIN 4
 #define SAFETY_LIGHT_PIN 5
 #define BARREL_SELECT_BUTTON_PIN 6
+#define BARREL1_GATE1_PIN 7
+#define BARREL1_GATE2_PIN 8
+#define BARREL2_GATE1_PIN 9
+#define BARREL2_GATE2_PIN 10
+#define BARREL3_GATE1_PIN 11
+#define BARREL3_GATE2_PIN 12
+
 
 //macros for various states, so they can be changed easily from low-side drive
 //to high side drive if necessary without touching the software

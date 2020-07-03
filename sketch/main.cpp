@@ -30,4 +30,12 @@ void InitializePins()
 
     pinMode(SAFETY_LIGHT_PIN, OUTPUT);
     digitalWrite(SAFETY_LIGHT_PIN, SAFETY_LIGHT_OFF);
+
+    //Barrel velocity sensor gates
+    pinMode(BARREL1_GATE1_PIN, INPUT);
+    pinMode(BARREL1_GATE2_PIN, INPUT);
+    pinMode(BARREL2_GATE1_PIN, INPUT);
+    pinMode(BARREL2_GATE2_PIN, INPUT);
+    pinMode(BARREL3_GATE1_PIN, INPUT);
+    pinMode(BARREL3_GATE2_PIN, INPUT);
 }

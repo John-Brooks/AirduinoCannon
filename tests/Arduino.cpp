@@ -69,34 +69,43 @@ void pinMode(int pin, int mode)
 {
     arduino.SetPinMode(pin, mode);
 }
-
-
-void Arduino::TickMillisecond(uint32_t milliseconds)
+void delay(int milliseconds)
 {
-    current_micros += ((uint64_t)milliseconds) * 1000;
-    CheckPinSchedule();
+    if ((((uint64_t)milliseconds)*1000) > 0xFFFFFFFF)
+        throw std::out_of_range("simulator only supports delays up to ~35.8 minutes");
+    arduino.TickMicrosecond(milliseconds * 1000);
 }
+void delayMicroseconds(int microseconds)
+{
+    arduino.TickMicrosecond(microseconds);
+}
+
+
+
 void Arduino::TickMicrosecond(uint32_t microseconds)
 {
-    current_micros += microseconds;
-    CheckPinSchedule();
-}
-void Arduino::CheckPinSchedule()
-{
+    uint64_t starting_time = current_micros;
+    uint64_t ending_time = starting_time + microseconds;
+
     if(!scheduled_pin_toggles.size())
         return;
-    //I just want my c++17 structured bindings :'(
-    for(const auto& [time, pins] : scheduled_pin_toggles)
+        
+    for(const auto& [pin_change_time, pins] : scheduled_pin_toggles)
     {
         //std::map is sorted so we can safely return if we haven't reached this time.
-        if (time < current_micros)
-            return;
+        if (pin_change_time > ending_time)
+            break;
+
+        //fast forward the clock to the pin change time
+        current_micros = pin_change_time;
 
         for(const auto& pin : pins)
             SetPinState(pin, !GetPinState(pin));
 
-        scheduled_pin_toggles.erase(time);
+        scheduled_pin_toggles.erase(pin_change_time);
     }
+
+    current_micros = ending_time;
 }
 uint32_t Arduino::Micros()
 {
@@ -125,8 +134,17 @@ void Arduino::SetPinMode(int pin, bool mode)
 {
     pin_modes[pin] = mode;
 }
-bool Arduino::Reset()
+void Arduino::Reset()
 {
-    return false;
+    for(int i = 0; i < PIN_COUNT; i++)
+    {
+        pin_states[i] = LOW;
+        pin_modes[i] = OUTPUT;
+    }
+    current_micros = 0;
+    increment_on_micros_call = false;
+    registers.clear();
+    interrupts.clear();
+    scheduled_pin_toggles.clear();
 }
 
