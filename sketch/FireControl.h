@@ -15,6 +15,9 @@ public:
     int GetSelectedBarrel() const { return mSelectedBarrel; };
     void SetDwellTime(int barrel, uint32_t micros);
     uint32_t GetDwellTime(int barrel);
+    bool HasFault() const { return mFaultActive; }
+    const char* GetFaultText() const { return mFaultText; }
+    void ClearFault() { mFaultActive = false; }
 
 private:
     void Fire(uint32_t current_time);
@@ -33,5 +36,8 @@ private:
 
     int mNumCallbacks = 0;
     GONOGOCallback_t mGONOGOCallbacks[MAX_GO_NOGO_CALLBACKS] = { nullptr };
+
+    bool mFaultActive = false;
+    char mFaultText[33];
 };   
 

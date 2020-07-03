@@ -55,7 +55,7 @@ TEST(FireControlTests, PinConfiguration)
     ASSERT_EQ(arduino.GetPinState(SAFETY_LIGHT_PIN), SAFETY_LIGHT_OFF);
 }
 
-TEST(FireControlTests, SafetyMechanisms)
+TEST(FireControlTests, SafetyLight)
 {
     arduino.Reset();
     InitializePins();
@@ -124,9 +124,9 @@ void reset_valve_timings()
     valve_open_time = 0;
     valve_close_time = 0;
 }
-uint32_t test_valve_time(FireControl& uut, uint32_t valve_time)
+uint32_t test_valve_time(FireControl& uut, uint32_t valve_time, int barrel)
 {
-    uut.SetDwellTime(0, valve_time); //55.27 milliseconds
+    uut.SetDwellTime(barrel, valve_time); //55.27 milliseconds
     reset_valve_timings();
     attachInterrupt(valve_pin, valve_opened, RISING);
     PressButtonNormally(uut, FIRE_BUTTON_PIN);
@@ -142,17 +142,77 @@ TEST(FireControlTests, SolenoidTiming)
     arduino.Reset();
     InitializePins();
     valve_pin = BARREL_1_SOLENOID_PIN;
-
+    int barrel = 0;
     FireControl uut;
     uut.AddGONOGOCallback(ReturnTrueCallback);
     SpinFireControl(uut, 30001); //Move to some arbitrary time after startup
 
     uint32_t valve_time = 52700; //52.7ms
-    EXPECT_EQ(test_valve_time(uut, valve_time), valve_time);
+    EXPECT_EQ(test_valve_time(uut, valve_time, barrel), valve_time);
 
     valve_time = 350; //0.350ms
-    EXPECT_EQ(test_valve_time(uut, valve_time), valve_time);
+    EXPECT_EQ(test_valve_time(uut, valve_time, barrel), valve_time);
 
     valve_time = 567145; //567.145ms
-    EXPECT_EQ(test_valve_time(uut, valve_time), valve_time);
+    EXPECT_EQ(test_valve_time(uut, valve_time, barrel), valve_time);
+}
+TEST(FireControlTests, NoFireWithSafetyOn)
+{
+    arduino.Reset();
+    InitializePins();
+    valve_pin = BARREL_1_SOLENOID_PIN;
+    int barrel = 0;
+
+    FireControl uut;
+    uut.AddGONOGOCallback(ReturnFalseCallback);
+    SpinFireControl(uut, 30001); //Move to some arbitrary time after startup
+
+    uint32_t valve_time = 52700; //52.7ms
+    EXPECT_EQ(test_valve_time(uut, valve_time, barrel), 0);  
+    EXPECT_EQ(valve_open_time, 0);
+}
+
+TEST(FireControlTests, FireButtonStuckHighFault)
+{
+    //simulate electrical failure on FIRE button (holding HIGH), whereby when the safety is 
+    //disengaged the system would immiedietly fire. Seems dangerous so a 
+    //safety system exists to prevent this. This test verifies its functionality.
+
+    arduino.Reset();
+    InitializePins();
+    valve_pin = BARREL_1_SOLENOID_PIN;
+    int barrel = 0;
+
+    reset_valve_timings();
+    attachInterrupt(valve_pin, valve_opened, RISING);
+
+    FireControl uut;
+    uut.AddGONOGOCallback(ReadyToFireCallback);
+
+    //engage the software safety
+    safety_engaged = true;
+    SpinFireControl(uut, 30001); //Move to some arbitrary time after startup
+    
+    //Activate the FIRE button fault mode where it is stuck high
+    arduino.SetPinState(FIRE_BUTTON_PIN, HIGH);
+
+    SpinFireControl(uut, 3000); //spin a few seconds
+    
+    //user disengaged software safety.
+    safety_engaged = false;
+
+    SpinFireControl(uut, 3000); //spin a few seconds
+    EXPECT_EQ(valve_open_time, 0) << 
+        "Expect that the system did not fire";
+    EXPECT_TRUE(uut.HasFault());
+
+    arduino.SetPinState(FIRE_BUTTON_PIN, LOW);
+    uut.ClearFault();
+    SpinFireControl(uut, 3000); //spin a few seconds
+
+
+    //Attempt to fire the system.
+    uint32_t valve_time = 52700; //52.7ms
+    EXPECT_EQ(test_valve_time(uut, valve_time, barrel), valve_time) << 
+        "Expect the system to recover from the fault mode.";  
 }

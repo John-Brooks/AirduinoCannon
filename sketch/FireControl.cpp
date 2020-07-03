@@ -2,6 +2,7 @@
 #include "Arduino.h"
 #include "ArduinoPins.h"
 #include "TimeDifference.h"
+#include <cstring>
 
 #if defined (__linux__) || (__WIN32)
     #include <cassert>
@@ -23,11 +24,31 @@ FireControl::FireControl() :
 
 bool FireControl::ReadyToFire()
 {
+    static bool fire_button_fault_lockout = true;
+
     for (int i = 0; i < mNumCallbacks; i++)
     {
         if (!mGONOGOCallbacks[i]()) 
+        {
+            fire_button_fault_lockout = digitalRead(FIRE_BUTTON_PIN);
             return false; 
+        }
     }
+
+    if (fire_button_fault_lockout)
+    {
+        if (digitalRead(FIRE_BUTTON_PIN))
+        {
+            mFaultActive = true;
+            const char* fault_text = "FAULT:  FIRE    "
+                                     "CONTROL STUCK   ";
+            memcpy(mFaultText, fault_text, sizeof(mFaultText));
+            return false;
+        }
+        else
+            fire_button_fault_lockout = false;
+    }
+
     return true;
 }
 
