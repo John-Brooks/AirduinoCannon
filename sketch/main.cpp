@@ -60,4 +60,8 @@ void InitializePins()
     pinMode(BARREL2_GATE2_PIN, INPUT);
     pinMode(BARREL3_GATE1_PIN, INPUT);
     pinMode(BARREL3_GATE2_PIN, INPUT);
+
+    pinMode(JOYSTICK_X_PIN, INPUT);
+    pinMode(JOYSTICK_Y_PIN, INPUT);
+    pinMode(JOYSTICK_CLICK_PIN, INPUT);
 }

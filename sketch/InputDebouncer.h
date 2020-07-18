@@ -4,7 +4,7 @@
 class InputDebouncer
 {
 public:
-    InputDebouncer(uint16_t _debounce_time_ms) : debounce_time(_debounce_time_ms) {}
+    InputDebouncer(uint16_t _debounce_time_ms = 250) : debounce_time(_debounce_time_ms) {}
     
     //pass in the current value and current time, returns the debounced value
     bool DebounceInput(bool real_value, uint32_t current_time_ms)

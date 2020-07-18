@@ -11,6 +11,7 @@ add_library(arduino_code
     sketch/main.cpp
     sketch/FireControl.cpp
     sketch/VelocityMeasurement.cpp
+    sketch/Joystick.cpp
 )
 include_directories(sketch)
 
@@ -21,6 +22,7 @@ add_executable(Tests
     tests/TestInputDebouncer.cpp
     tests/TestFireControl.cpp
     tests/TestVelocityMeasurement.cpp
+    tests/TestJoystick.cpp
 )
 
 target_link_libraries(Tests PUBLIC arduino_code gtest)

@@ -93,7 +93,6 @@ int digitalPinToInterrupt(int pin)
     return pin;
 }
 
-
 void Arduino::TickMillisecond(uint32_t milliseconds)
 {
     if ((((uint64_t)milliseconds)*1000) > 0xFFFFFFFF)
