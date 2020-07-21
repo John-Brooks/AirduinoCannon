@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include "main.h"
+#include "LiquidCrystal.h"
 
 int main()
 {

@@ -19,6 +19,7 @@ include_directories(googletest/googletest/include)
 add_executable(Tests 
     tests/TestMain.cpp
     tests/Arduino.cpp
+    tests/LiquidCrystal.cpp
     tests/TestInputDebouncer.cpp
     tests/TestFireControl.cpp
     tests/TestVelocityMeasurement.cpp
