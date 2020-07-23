@@ -62,7 +62,7 @@ void LiquidCrystal::PrintToConsole() const
 std::string LiquidCrystal::GetRow(int row) const
 {
     auto row_buffer = std::make_unique<char[]>(allocated_cols + 1);
-    size_t text_index = (allocated_cols * row) + cursor_col_pos;
+    size_t text_index = (allocated_cols * row);
     memcpy(row_buffer.get(), &display_text[text_index], allocated_cols);
     row_buffer[allocated_cols] = '\0';
     return std::string(row_buffer.get());

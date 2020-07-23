@@ -16,7 +16,7 @@ const int BARREL3_GATE2_PIN = 12;
 const int JOYSTICK_X_PIN = A0;
 const int JOYSTICK_Y_PIN = A1;
 const int JOYSTICK_CLICK_PIN = 13;
-
+const int PRESSURE_TRANSD_PIN = A2;
 
 const int SOLENOID_CLOSED = 0;
 const int SOLENOID_OPEN = 1;

@@ -3,8 +3,10 @@
 #include "ArduinoPins.h"
 #include "FireControl.h"
 #include "VelocityMeasurement.h"
+#include "HomeScreen.h"
 
 VelocityMeasurement* velocity_measures[3] = {nullptr};
+Screen* screens[3] = {nullptr};
 
 bool AboutToFire(int barrel)
 {
@@ -29,6 +31,10 @@ int arduino_main()
 
     //Setup fire control
     fire_control.SetAboutToFireCallback(AboutToFire);
+
+    int focused_screen = 0;
+    HomeScreen home_screen;
+    screens[0] = &home_screen;
 
 
     while(true)
@@ -64,4 +70,6 @@ void InitializePins()
     pinMode(JOYSTICK_X_PIN, INPUT);
     pinMode(JOYSTICK_Y_PIN, INPUT);
     pinMode(JOYSTICK_CLICK_PIN, INPUT);
+
+    pinMode(PRESSURE_TRANSD_PIN, INPUT);
 }
