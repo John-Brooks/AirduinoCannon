@@ -15,7 +15,7 @@ void SpinFireControl(FireControl& uut, uint32_t milliseconds_to_spin)
     uint32_t current_time = millis();
     for(int i = 0; i < milliseconds_to_spin; i++)
     {
-        uut.Loop(current_time + i);
+        uut.Run(current_time + i);
         arduino.TickMillisecond();
     }  
 }
@@ -24,7 +24,7 @@ void SpinFireControlMicroseconds(FireControl& uut, uint32_t microseconds_to_spin
     uint32_t current_time = millis();
     for(int i = 0; i < microseconds_to_spin; i++)
     {
-        uut.Loop(current_time + i);
+        uut.Run(current_time + i);
         arduino.TickMicrosecond();
     }  
 }
@@ -68,14 +68,14 @@ TEST(FireControlTests, SafetyLight)
 
     //expect with the safety disengaged that the light is ON
     safety_engaged = false;
-    uut.Loop(millis());
+    uut.Run(millis());
     ASSERT_EQ(arduino.GetPinState(SAFETY_LIGHT_PIN), SAFETY_LIGHT_ON);
     ASSERT_EQ(arduino.GetPinState(SAFETY_LIGHT_PIN), SAFETY_LIGHT_ON);
 
     //expect with the safety engaged that the light is ON
     safety_engaged = true;
     arduino.TickMillisecond();
-    uut.Loop(millis());
+    uut.Run(millis());
     ASSERT_EQ(arduino.GetPinState(SAFETY_LIGHT_PIN), SAFETY_LIGHT_OFF);
 
     //Expect that if we add a new system which is saying that it's not 
@@ -83,7 +83,7 @@ TEST(FireControlTests, SafetyLight)
     uut.AddGONOGOCallback(&ReturnFalseCallback);
     safety_engaged = false;
     arduino.TickMillisecond();
-    uut.Loop(millis());
+    uut.Run(millis());
     ASSERT_EQ(arduino.GetPinState(SAFETY_LIGHT_PIN), SAFETY_LIGHT_OFF);
 }
 

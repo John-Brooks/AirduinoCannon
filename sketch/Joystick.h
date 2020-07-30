@@ -15,7 +15,7 @@ enum class JoystickEvent
 
 typedef void (*JoystickEventHandler_t)(JoystickEvent);
 
-class Joystick : Runnable
+class Joystick : public Runnable
 {
 public:
     void SetEventHandler(JoystickEventHandler_t funct);

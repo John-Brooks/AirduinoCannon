@@ -13,6 +13,7 @@ add_library(arduino_code
     sketch/VelocityMeasurement.cpp
     sketch/Joystick.cpp
     sketch/HomeScreen.cpp
+    sketch/BarrelAngleScreen.cpp
 )
 include_directories(sketch)
 
@@ -26,6 +27,8 @@ add_executable(Tests
     tests/TestVelocityMeasurement.cpp
     tests/TestJoystick.cpp
     tests/TestHomeScreen.cpp
+    tests/TestBarrelAngleScreen.cpp
+    tests/StepperMotorSim.cpp
 )
 
 target_link_libraries(Tests PUBLIC arduino_code gtest)

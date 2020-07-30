@@ -5,7 +5,7 @@
 class ButtonInput
 {
 public:
-    ButtonInput(unsigned int _input_pin, uint16_t debounce_time) : input_pin(_input_pin), debouncer(debounce_time){}
+    ButtonInput(unsigned int _input_pin, uint16_t debounce_time = 250) : input_pin(_input_pin), debouncer(debounce_time){}
 
     bool IsPressed(uint32_t current_time)
     {

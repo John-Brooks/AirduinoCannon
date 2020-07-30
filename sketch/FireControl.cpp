@@ -71,7 +71,7 @@ void FireControl::SelectNextBarrel()
         mSelectedBarrel++;
 }
 
-bool FireControl::Loop(uint32_t current_time)
+void FireControl::Run(uint32_t current_time)
 {
     if(mBarrelSelectBtn.IsPressed(current_time))
         SelectNextBarrel();
@@ -90,8 +90,6 @@ bool FireControl::Loop(uint32_t current_time)
         if (ready_to_fire)
             Fire(current_time);
     }
-        
-    return true;
 }
 
 void FireControl::Fire(uint32_t current_time)

@@ -1,17 +1,18 @@
 #pragma once
 #include <stdint.h>
 #include "ButtonInput.h"
+#include "Runnable.h"
 
 typedef bool (*GONOGOCallback_t)(void);
 typedef bool (*AboutToFireCallback_t)(int);
 
 #define MAX_GO_NOGO_CALLBACKS 5
 
-class FireControl
+class FireControl : public Runnable
 {
 public:
     FireControl();
-    bool Loop(uint32_t current_time);
+    void Run(uint32_t current_time);
     void AddGONOGOCallback(GONOGOCallback_t funct);
     int GetSelectedBarrel() const { return mSelectedBarrel; };
     void SetDwellTime(int barrel, uint32_t micros);

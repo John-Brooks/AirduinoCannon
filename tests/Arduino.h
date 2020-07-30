@@ -6,6 +6,7 @@
 #include <tuple>
 #include "Mega2560Pins.h"
 #include <stdint.h>
+#include <math.h>
 
 #define HIGH 1
 #define LOW 0
