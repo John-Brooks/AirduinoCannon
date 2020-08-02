@@ -5,6 +5,7 @@
 #include "VelocityMeasurement.h"
 #include "HomeScreen.h"
 #include "BarrelAngleScreen.h"
+#include "DwellAdjustScreen.h"
 #include "Runnable.h"
 #include "Joystick.h"
 
@@ -17,6 +18,8 @@ Screen* screens[3] = {nullptr};
 
 const int NUM_RUNNABLES = 2;
 Runnable* runnables[NUM_RUNNABLES] = {nullptr};
+
+FireControl fire_control;
 
 void JoystickEventFunct(JoystickEvent event)
 {
@@ -41,6 +44,18 @@ void JoystickEventFunct(JoystickEvent event)
     else if(focused_screen > last_screen)
         focused_screen = last_screen;
 }
+uint32_t AdjustBarrelDwellTime(int barrel, int32_t increment)
+{
+    uint32_t dwell = fire_control.GetDwellTime(barrel);
+
+    if(increment < 0 && (-increment) >= dwell)
+        dwell = 1;
+    else
+        dwell += increment;
+    
+    fire_control.SetDwellTime(barrel, dwell);
+    return dwell;
+}
 
 bool AboutToFire(int barrel)
 {
@@ -53,7 +68,6 @@ bool AboutToFire(int barrel)
 int arduino_main()
 {
     InitializePins();
-    FireControl fire_control;
 
     //Setup velocity measurement.
     VelocityMeasurement barrel_1_velocity(BARREL1_GATE1_PIN, BARREL1_GATE2_PIN, 0.03);
@@ -70,6 +84,9 @@ int arduino_main()
     screens[0] = &home_screen;
     BarrelAngleScreen barrel_angle_screen;
     screens[1] = &barrel_angle_screen;
+    DwellAdjustScreen dwell_adjust_screen;
+    screens[2] = &dwell_adjust_screen;
+    dwell_adjust_screen.SetDwellAdjustCallback(AdjustBarrelDwellTime);
 
     LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
 

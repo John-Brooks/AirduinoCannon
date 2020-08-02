@@ -10,7 +10,7 @@
 #include <string>
 #include <tuple>
 
-auto Init()
+static auto Init()
 {
     struct retVals{
         BarrelAngleScreen screen;

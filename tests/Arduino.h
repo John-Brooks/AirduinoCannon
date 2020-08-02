@@ -15,6 +15,7 @@
 #define CHANGE 2
 #define RISING 3
 #define FALLING 4
+const double PI = 3.1415926535897932384626433832795;
 
 //Interrupt service routine function pointer
 typedef void (*ISR)(); 

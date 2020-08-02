@@ -17,7 +17,7 @@ void BarrelAngleScreen::Draw(LiquidCrystal& lcd)
             lcd.setCursor(0,0);
             lcd.print("Target: ");
             lcd.setCursor(0,7);
-            sprintf(buffer, "%3.1f deg", ReadBarrelAngle());
+            sprintf(buffer, "%3.1f deg", (double)ReadBarrelAngle());
             lcd.print(buffer);
             break;
 
@@ -25,7 +25,7 @@ void BarrelAngleScreen::Draw(LiquidCrystal& lcd)
     lcd.setCursor(0,1);
     lcd.print("Angle: ");
     lcd.setCursor(7,1);
-    sprintf(buffer, "%3.1f deg", ReadBarrelAngle());
+    sprintf(buffer, "%3.1f deg", (double)ReadBarrelAngle());
     lcd.print(buffer);
 }
 

@@ -24,7 +24,8 @@ public:
     }
 
 private:
+    int input_pin;
     InputDebouncer debouncer;
     bool waiting_for_falling_edge = false;
-    int input_pin;
+    
 };

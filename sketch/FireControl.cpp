@@ -2,7 +2,7 @@
 #include "Arduino.h"
 #include "ArduinoPins.h"
 #include "TimeDifference.h"
-#include <cstring>
+#include <string.h>
 
 #if defined (__linux__) || (__WIN32)
     #include <cassert>
@@ -137,5 +137,11 @@ void FireControl::WaitValveDwellTime()
 }
 void FireControl::SetDwellTime(int barrel, uint32_t micros)
 {
+    assert(barrel <= 2);
     mDwellTimes[barrel] = micros;
+}
+uint32_t FireControl::GetDwellTime(int barrel)
+{
+    assert(barrel <= 2);
+    return mDwellTimes[barrel];
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include <type_traits>
 
 //This function only works for unsigned types, but provides rollover protection for measuring
 //time deltas.
