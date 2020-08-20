@@ -20,7 +20,7 @@ public:
     }
     
 private:
-    bool debounced_value;
+    bool debounced_value = 0;
     uint32_t last_input_time = 0;
     uint16_t debounce_time;
 };
