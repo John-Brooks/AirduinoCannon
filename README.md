@@ -25,7 +25,7 @@ Open a terminal
 7. `cmake ..`
 8. `make`
 
-### Arudino
+### Arduino
 
 On host machine
 1. `git clone [ssh url]`
