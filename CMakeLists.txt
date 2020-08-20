@@ -5,7 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "-O0")
 
-add_compile_options("/MT")
+if (WIN32)
+    add_compile_options("/MT")
+endif()
 
 enable_testing()
 add_subdirectory(googletest)
